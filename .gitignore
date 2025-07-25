@@ -1,0 +1,10 @@
+.vscode
+.idea
+.DS_Store
+vendor
+app
+app.exe
+go-ims
+go-ims.exe
+*.log
+__debug_*
