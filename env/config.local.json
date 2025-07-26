@@ -8,7 +8,7 @@
     "port": "3306",
     "user": "root",
     "pass": "password",
-    "schema": "product_management",
+    "schema": "inventory_management",
     "maxIdleConn": 1,
     "maxOpenConn": 2,
     "maxConnLifetime": 30,
@@ -19,25 +19,17 @@
     "port": "6379",
     "pass": "password",
     "db": 2,
-    "mandatoryPrefix": "product_management_"
+    "mandatoryPrefix": "inventory_managementt_"
   },
   "asynq": {
     "redisAddr": "192.168.56.106:6379",
     "db": 15,
     "pass": "password",
     "concurrency": 10,
-    "queue": "product-management",
+    "queue": "inventory_management",
     "retention": 168,
     "retryCount": 25,
-    "delay": 0,
-    "emailInvitationTaskDelay": 0,
-    "emailInvitationTaskRetryCount": 5,
-    "emailInvitationTaskRetryDelay": 30,
-    "productReminderTaskRetryCount": 5,
-    "productReminderTaskRetryDelay": 30,
-    "productReminderEmailTaskDelay": 0,
-    "productReminderEmailTaskRetryCount": 5,
-    "productReminderEmailTaskRetryDelay": 30
+    "delay": 0
   },
   "logger": {
     "level": "debug",
@@ -48,9 +40,5 @@
     "refreshTokenSecret": "refresh_token",
     "accessTokenExpiry": 3600,
     "refreshTokenExpiry": 3600
-  },
-  "email": {
-    "url": "https://webhook.site/d031be56-ce9a-4359-87db-2bc9262ab0e0/email",
-    "timeout": "5s"
   }
 }

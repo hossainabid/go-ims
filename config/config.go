@@ -118,6 +118,8 @@ func Email() *EmailConfig {
 }
 
 func LoadConfig() {
+	setDefaultConfig()
+
 	const (
 		ENV_CONSUL_URL  = "CONSUL_URL"
 		ENV_CONSUL_PATH = "CONSUL_PATH"
@@ -136,27 +138,77 @@ func LoadConfig() {
 		consulPath = "inventory-management"
 	}
 
-	if consulURL != "" && consulPath != "" {
-		_ = viper.AddRemoteProvider("consul", consulURL, consulPath)
+	if err := viper.AddRemoteProvider("consul", consulURL, consulPath); err != nil {
+		log.Printf("[WARN] Could not add remote provider: %v. Using default config.", err)
+		return
+	}
 
-		viper.SetConfigType("json")
-		err := viper.ReadRemoteConfig()
+	viper.SetConfigType("json")
+	if err := viper.ReadRemoteConfig(); err != nil {
+		log.Printf("[WARN] Failed to read config from Consul: %v. Using default config.", err)
+		return
+	}
 
-		if err != nil {
-			log.Printf("%s named \"%s\"\n", err.Error(), consulPath)
-			panic(err)
-		}
+	var remoteConfig Config
+	if err := viper.Unmarshal(&remoteConfig); err != nil {
+		log.Printf("[WARN] Failed to unmarshal remote config: %v. Using default config.", err)
+		return
+	}
 
-		config = Config{}
+	config = remoteConfig
 
-		if err := viper.Unmarshal(&config); err != nil {
-			panic(err)
-		}
+	if r, err := json.MarshalIndent(&config, "", "  "); err == nil {
+		log.Println("[INFO] Successfully loaded config from Consul:")
+		fmt.Println(string(r))
+	}
+}
 
-		if r, err := json.MarshalIndent(&config, "", "  "); err == nil {
-			fmt.Println(string(r))
-		}
-	} else {
-		log.Println("CONSUL_URL or CONSUL_PATH missing! Serving with default config...")
+func setDefaultConfig() {
+	config.App = &AppConfig{
+		Name: "inventory-management-service",
+		Port: "8080",
+	}
+
+	config.DB = &DbConfig{
+		Host:            "192.168.56.106",
+		Port:            "3306",
+		User:            "root",
+		Pass:            "password",
+		Schema:          "inventory_management",
+		MaxIdleConn:     1,
+		MaxOpenConn:     2,
+		MaxConnLifetime: 30,
+		Debug:           true,
+	}
+
+	config.Redis = &RedisConfig{
+		Host:            "192.168.56.106",
+		Port:            "6379",
+		Pass:            "password",
+		Db:              2,
+		MandatoryPrefix: "inventory_management_",
+	}
+
+	config.Asynq = &AsynqConfig{
+		RedisAddr:   "192.168.56.106:6379",
+		DB:          15,
+		Pass:        "password",
+		Concurrency: 10,
+		Queue:       "inventory_management",
+		Retention:   168,
+		RetryCount:  25,
+		Delay:       0,
+	}
+
+	config.Logger = &LoggerConfig{
+		Level:    "debug",
+		FilePath: "app.log",
+	}
+
+	config.Jwt = &JwtConfig{
+		AccessTokenSecret:  "access_token",
+		RefreshTokenSecret: "refresh_token",
+		AccessTokenExpiry:  3600,
+		RefreshTokenExpiry: 3600,
 	}
 }
