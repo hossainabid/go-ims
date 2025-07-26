@@ -56,10 +56,6 @@ func (ctrl *ProductController) CreateProduct(c echo.Context) error {
 }
 
 func (ctrl *ProductController) ListProducts(c echo.Context) error {
-	user, err := middlewares.CurrentUserFromCtx(c)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, msgutil.UserUnauthorized())
-	}
 	req := types.ListProductRequest{}
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, msgutil.InvalidRequestMsg())
@@ -70,7 +66,7 @@ func (ctrl *ProductController) ListProducts(c echo.Context) error {
 	if req.Page <= 0 {
 		req.Page = consts.DefaultPage
 	}
-	products, err := ctrl.productSvc.ListProducts(req, user)
+	products, err := ctrl.productSvc.ListProducts(req)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
 	}

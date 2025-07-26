@@ -22,7 +22,7 @@ func NewTokenServiceImpl(redisSvc *RedisService) *TokenServiceImpl {
 	return &TokenServiceImpl{redisSvc: redisSvc}
 }
 
-func (*TokenServiceImpl) CreateToken(userID int) (*types.Token, error) {
+func (svc *TokenServiceImpl) CreateToken(userID int) (*types.Token, error) {
 	jwtConf := config.Jwt()
 	token := &types.Token{}
 

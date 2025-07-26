@@ -155,7 +155,7 @@ func (svc *UserServiceImpl) readUserFromCache(id int) (*types.UserInfo, error) {
 }
 
 func (svc *UserServiceImpl) readUserFromDB(id int) (*types.UserInfo, error) {
-	user, err := svc.repo.ReadUserById(id)
+	user, err := svc.repo.ReadUser(id)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		logger.Error(fmt.Sprintf("error occurred: [%v] while fetching user by user id: [%d]", err, id))
 		return nil, err
@@ -226,7 +226,7 @@ func (svc *UserServiceImpl) storePermissionInCache(roleID int, permissions []*mo
 func (svc *UserServiceImpl) ListUsers(req types.ListUserReq) (*types.PaginatedUserResp, error) {
 	offset := (req.Page - 1) * req.Limit
 
-	users, total, err := svc.repo.ReadPaginatedUsers(req.Limit, offset)
+	users, total, err := svc.repo.ListUsers(req.Limit, offset)
 	if err != nil {
 		logger.Error(fmt.Errorf("error occurred: [%v] while fetching paginated users", err))
 		return nil, err
@@ -244,15 +244,4 @@ func (svc *UserServiceImpl) ListUsers(req types.ListUserReq) (*types.PaginatedUs
 	}
 
 	return resp, nil
-}
-
-func (svc *UserServiceImpl) ListAttendees(user types.CurrentUser) ([]types.AttendeeResp, error) {
-	filter := &types.AttendeeFilter{}
-	users, err := svc.repo.ListAttendees(filter)
-
-	if err != nil {
-		logger.Error(fmt.Errorf("error occurred: [%v] while fetching attendees for user ID: %d", err, user.ID))
-		return nil, err
-	}
-	return users, nil
 }

@@ -56,17 +56,6 @@ type (
 		Limit int         `json:"limit"`
 		Users []*UserInfo `json:"users"`
 	}
-
-	AttendeeFilter struct {
-		RoleID int
-	}
-
-	AttendeeResp struct {
-		ID        int    `json:"id"`
-		Email     string `json:"email"`
-		FirstName string `json:"first_name"`
-		LastName  string `json:"last_name"`
-	}
 )
 
 func (crq *CreateUserReq) Validate() error {

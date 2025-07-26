@@ -11,13 +11,11 @@ import (
 
 type ProductServiceImpl struct {
 	productRepo domain.ProductRepository
-	userRepo    domain.UserRepository
 }
 
-func NewProductServiceImpl(productRepo domain.ProductRepository, userRepo domain.UserRepository) *ProductServiceImpl {
+func NewProductServiceImpl(productRepo domain.ProductRepository) *ProductServiceImpl {
 	return &ProductServiceImpl{
 		productRepo: productRepo,
-		userRepo:    userRepo,
 	}
 }
 
@@ -34,10 +32,9 @@ func (svc *ProductServiceImpl) CreateProduct(productReq *types.CreateProductRequ
 	}, nil
 }
 
-func (svc *ProductServiceImpl) ListProducts(req types.ListProductRequest, user *types.CurrentUser) (*types.PaginatedProductResponse, error) {
-	offset := (req.Page - 1) * req.Limit
-	filter := svc.getProductListFilter(user)
-	products, count, err := svc.productRepo.ListProducts(filter, req.Limit, offset)
+func (svc *ProductServiceImpl) ListProducts(productReq types.ListProductRequest) (*types.PaginatedProductResponse, error) {
+	offset := (productReq.Page - 1) * productReq.Limit
+	products, count, err := svc.productRepo.ListProducts(productReq.Limit, offset)
 	if errors.Is(err, errutil.ErrRecordNotFound) {
 		return &types.PaginatedProductResponse{}, nil
 	}
@@ -45,17 +42,12 @@ func (svc *ProductServiceImpl) ListProducts(req types.ListProductRequest, user *
 		return nil, err
 	}
 	response := &types.PaginatedProductResponse{
-		Page:     req.Page,
-		Limit:    req.Limit,
+		Page:     productReq.Page,
+		Limit:    productReq.Limit,
 		Total:    count,
 		Products: products,
 	}
 	return response, nil
-}
-
-func (svc *ProductServiceImpl) getProductListFilter(user *types.CurrentUser) *types.ProductFilter {
-	filter := &types.ProductFilter{}
-	return filter
 }
 
 func (svc *ProductServiceImpl) ReadProductByID(id int) (*models.Product, error) {

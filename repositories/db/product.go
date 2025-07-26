@@ -6,7 +6,6 @@ import (
 
 	"github.com/hossainabid/go-ims/logger"
 	"github.com/hossainabid/go-ims/models"
-	"github.com/hossainabid/go-ims/types"
 	"github.com/hossainabid/go-ims/utils/errutil"
 	"gorm.io/gorm"
 )
@@ -21,12 +20,11 @@ func (repo *Repository) CreateProduct(product *models.Product) (*models.Product,
 	return product, nil
 }
 
-func (repo *Repository) ListProducts(filter *types.ProductFilter, Limit, Offset int) ([]*models.Product, int, error) {
+func (repo *Repository) ListProducts(Limit, Offset int) ([]*models.Product, int, error) {
 	var products []*models.Product
 	var count int64
 
 	query := repo.client.Model(&models.Product{})
-	repo.applyFilters(query, filter)
 
 	if err := query.Count(&count).Error; err != nil {
 		return nil, 0, err
@@ -42,15 +40,6 @@ func (repo *Repository) ListProducts(filter *types.ProductFilter, Limit, Offset 
 	}
 
 	return products, int(count), nil
-}
-
-func (repo *Repository) applyFilters(query *gorm.DB, filter *types.ProductFilter) {
-	if filter == nil {
-		return
-	}
-	if filter.CreatedBy != nil {
-		query = query.Where("created_by = ?", filter.CreatedBy)
-	}
 }
 
 func (repo *Repository) ReadProductByID(id int) (*models.Product, error) {

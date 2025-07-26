@@ -8,7 +8,7 @@ import (
 type (
 	ProductService interface {
 		CreateProduct(productReq *types.CreateProductRequest) (*types.CreateProductResponse, error)
-		ListProducts(req types.ListProductRequest, user *types.CurrentUser) (*types.PaginatedProductResponse, error)
+		ListProducts(productReq types.ListProductRequest) (*types.PaginatedProductResponse, error)
 		ReadProductByID(id int) (*models.Product, error)
 		UpdateProduct(productReq *types.UpdateProductRequest) (*types.UpdateProductResponse, error)
 		DeleteProduct(id int) (*types.DeleteProductResponse, error)
@@ -16,7 +16,7 @@ type (
 
 	ProductRepository interface {
 		CreateProduct(product *models.Product) (*models.Product, error)
-		ListProducts(filter *types.ProductFilter, limit, offset int) ([]*models.Product, int, error)
+		ListProducts(limit, offset int) ([]*models.Product, int, error)
 		ReadProductByID(id int) (*models.Product, error)
 		UpdateProduct(product *models.Product) (*models.Product, error)
 		DeleteProduct(id int) error
