@@ -68,6 +68,7 @@ func (svc *ProductServiceImpl) UpdateProduct(productReq *types.UpdateProductRequ
 	}
 
 	product := productReq.ToProduct()
+	product.CreatedBy = existingProduct.CreatedBy
 	updatedProduct, err := svc.productRepo.UpdateProduct(product)
 	if err != nil {
 		return nil, err
