@@ -30,12 +30,14 @@ func serve(cmd *cobra.Command, args []string) {
 	redisSvc := services.NewRedisService(redisClient)
 	productSvc := services.NewProductServiceImpl(dbRepo)
 	userSvc := services.NewUserServiceImpl(redisSvc, dbRepo)
+	stockHistorySvc := services.NewStockHistoryServiceImpl(dbRepo)
 	tokenSvc := services.NewTokenServiceImpl(redisSvc)
 	authSvc := services.NewAuthServiceImpl(userSvc, tokenSvc)
 
 	// controllers
 	productCtrl := controllers.NewProductController(productSvc)
 	userCtrl := controllers.NewUserController(userSvc)
+	stockHistoryCtrl := controllers.NewStockHistoryController(stockHistorySvc)
 	authCtrl := controllers.NewAuthController(authSvc)
 
 	// middlewares
@@ -43,7 +45,7 @@ func serve(cmd *cobra.Command, args []string) {
 
 	// Server
 	var echo_ = echo.New()
-	var Routes = routes.New(echo_, productCtrl, userCtrl, authCtrl, authMiddleware)
+	var Routes = routes.New(echo_, productCtrl, userCtrl, stockHistoryCtrl, authCtrl, authMiddleware)
 	var Server = server.New(echo_)
 
 	// Spooling

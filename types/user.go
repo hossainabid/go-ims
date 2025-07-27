@@ -81,11 +81,3 @@ func (rq *UserReq) Validate() error {
 		v.Field(&rq.ID, v.Required, v.Min(1)),
 	)
 }
-func (u CurrentUser) HasPermission(permission string) bool {
-	for _, p := range u.Permissions {
-		if p == permission {
-			return true
-		}
-	}
-	return false
-}

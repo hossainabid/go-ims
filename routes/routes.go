@@ -9,20 +9,22 @@ import (
 )
 
 type Routes struct {
-	echo           *echo.Echo
-	productCtrl    *controllers.ProductController
-	userCtrl       *controllers.UserController
-	authCtrl       *controllers.AuthController
-	authMiddleware *m.AuthMiddleware
+	echo             *echo.Echo
+	productCtrl      *controllers.ProductController
+	userCtrl         *controllers.UserController
+	stockHistoryCtrl *controllers.StockHistoryController
+	authCtrl         *controllers.AuthController
+	authMiddleware   *m.AuthMiddleware
 }
 
-func New(e *echo.Echo, productCtrl *controllers.ProductController, userCtrl *controllers.UserController, authCtrl *controllers.AuthController, authMiddleware *m.AuthMiddleware) *Routes {
+func New(e *echo.Echo, productCtrl *controllers.ProductController, userCtrl *controllers.UserController, stockHistoryCtrl *controllers.StockHistoryController, authCtrl *controllers.AuthController, authMiddleware *m.AuthMiddleware) *Routes {
 	return &Routes{
-		echo:           e,
-		productCtrl:    productCtrl,
-		userCtrl:       userCtrl,
-		authCtrl:       authCtrl,
-		authMiddleware: authMiddleware,
+		echo:             e,
+		productCtrl:      productCtrl,
+		userCtrl:         userCtrl,
+		stockHistoryCtrl: stockHistoryCtrl,
+		authCtrl:         authCtrl,
+		authMiddleware:   authMiddleware,
 	}
 }
 
@@ -34,11 +36,12 @@ func (r *Routes) Init() {
 
 	g := e.Group("/v1")
 
-	g.POST("/products", r.productCtrl.CreateProduct, r.authMiddleware.Authenticate(consts.PermissionProductCreate))
-	g.GET("/products", r.productCtrl.ListProducts, r.authMiddleware.Authenticate(consts.PermissionProductList))
-	g.GET("/products/:id", r.productCtrl.ReadProductByID, r.authMiddleware.Authenticate(consts.PermissionProductFetch))
-	g.PUT("/products/:id", r.productCtrl.UpdateProduct, r.authMiddleware.Authenticate(consts.PermissionProductUpdate))
-	g.DELETE("/products/:id", r.productCtrl.DeleteProduct, r.authMiddleware.Authenticate(consts.PermissionProductDelete))
+	products := g.Group("/products")
+	products.POST("", r.productCtrl.CreateProduct, r.authMiddleware.Authenticate(consts.PermissionProductCreate))
+	products.GET("", r.productCtrl.ListProducts, r.authMiddleware.Authenticate(consts.PermissionProductList))
+	products.GET("/:id", r.productCtrl.ReadProductByID, r.authMiddleware.Authenticate(consts.PermissionProductFetch))
+	products.PUT("/:id", r.productCtrl.UpdateProduct, r.authMiddleware.Authenticate(consts.PermissionProductUpdate))
+	products.DELETE("/:id", r.productCtrl.DeleteProduct, r.authMiddleware.Authenticate(consts.PermissionProductDelete))
 
 	users := g.Group("/users")
 	users.POST("/signup", r.userCtrl.Signup)
@@ -52,5 +55,9 @@ func (r *Routes) Init() {
 	auth := g.Group("/auth")
 	auth.POST("/login", r.authCtrl.Login)
 	auth.POST("/logout", r.authCtrl.Logout, r.authMiddleware.Authenticate(""))
+
+	stockHistories := g.Group("/stock-histories")
+	stockHistories.POST("", r.stockHistoryCtrl.RecordStockHistory, r.authMiddleware.Authenticate(consts.PermissionStockHistoryRecord))
+	stockHistories.GET("", r.stockHistoryCtrl.ListStockHistories, r.authMiddleware.Authenticate(consts.PermissionStockHistoryList))
 
 }

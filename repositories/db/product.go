@@ -20,7 +20,7 @@ func (repo *Repository) CreateProduct(product *models.Product) (*models.Product,
 	return product, nil
 }
 
-func (repo *Repository) ListProducts(Limit, Offset int) ([]*models.Product, int, error) {
+func (repo *Repository) ListProducts(limit, offset int) ([]*models.Product, int, error) {
 	var products []*models.Product
 	var count int64
 
@@ -29,7 +29,7 @@ func (repo *Repository) ListProducts(Limit, Offset int) ([]*models.Product, int,
 	if err := query.Count(&count).Error; err != nil {
 		return nil, 0, err
 	}
-	result := query.Offset(Offset).Limit(Limit).Find(&products)
+	result := query.Offset(offset).Limit(limit).Find(&products)
 	if result.RowsAffected == 0 {
 		logger.Error("no products found")
 		return nil, 0, errutil.ErrRecordNotFound

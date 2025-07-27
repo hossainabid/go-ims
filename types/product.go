@@ -32,10 +32,6 @@ type (
 		Product *models.Product `json:"product"`
 	}
 
-	ProductFilter struct {
-		CreatedBy *int `query:"created_by"`
-	}
-
 	ListProductRequest struct {
 		Page  int `query:"page"`
 		Limit int `query:"limit"`
