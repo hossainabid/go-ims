@@ -2,6 +2,7 @@ package types
 
 import (
 	v "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/hossainabid/go-ims/consts"
 	"github.com/hossainabid/go-ims/models"
 )
 
@@ -10,7 +11,6 @@ type (
 		ProductID     int    `json:"product_id"`
 		Qty           int    `json:"qty"`
 		OperationType string `json:"operation_type"`
-		Operation     string `json:"operation"`
 		CreatedBy     int    `json:"created_by"`
 	}
 
@@ -37,8 +37,12 @@ func (rshreq *RecordStockHistoryRequest) Validate() error {
 	return v.ValidateStruct(rshreq,
 		v.Field(&rshreq.ProductID, v.Required),
 		v.Field(&rshreq.Qty, v.Required),
-		v.Field(&rshreq.OperationType, v.Required),
-		v.Field(&rshreq.Operation, v.Required),
+		v.Field(&rshreq.OperationType, v.Required, v.In(
+			consts.OperationTypeRequisition,
+			consts.OperationTypePublishInLive,
+			consts.OperationTypeRevertBackFromLive,
+			consts.OperationTypeMarkDamage),
+		),
 	)
 }
 
@@ -47,7 +51,7 @@ func (rshreq *RecordStockHistoryRequest) ToStockHistory() *models.StockHistory {
 		ProductID:     rshreq.ProductID,
 		Qty:           rshreq.Qty,
 		OperationType: rshreq.OperationType,
-		Operation:     rshreq.Operation,
+		Operation:     consts.OperationTypeMap[rshreq.OperationType],
 		CreatedBy:     rshreq.CreatedBy,
 	}
 	return stockHistory

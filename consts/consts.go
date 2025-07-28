@@ -30,7 +30,7 @@ const (
 	OperationTypeRequisition        = "requisition"
 	OperationTypePublishInLive      = "publish_in_live"
 	OperationTypeRevertBackFromLive = "revert_back_from_live"
-	OperationTypeDamage             = "damage"
+	OperationTypeMarkDamage         = "mark_damage"
 
 	OperationIncrement = "increment"
 	OperationDecrement = "decrement"
@@ -46,5 +46,5 @@ var OperationTypeMap = map[string]string{
 	OperationTypeRequisition:        OperationIncrement,
 	OperationTypePublishInLive:      OperationDecrement,
 	OperationTypeRevertBackFromLive: OperationIncrement,
-	OperationTypeDamage:             OperationDecrement,
+	OperationTypeMarkDamage:         OperationDecrement,
 }
