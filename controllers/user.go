@@ -39,7 +39,9 @@ func (ctrl *UserController) Signup(c echo.Context) error {
 		case errors.Is(err, errutil.ErrUserAlreadyExist):
 			return c.JSON(http.StatusConflict, msgutil.UserAlreadyExists())
 		}
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusCreated, msgutil.UserCreatedSuccessfully())
@@ -57,7 +59,9 @@ func (ctrl *UserController) Profile(c echo.Context) error {
 		case errors.Is(err, errutil.ErrUserNotFound):
 			return c.JSON(http.StatusNotFound, msgutil.UserNotFound())
 		}
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusOK, resp)
@@ -80,7 +84,9 @@ func (ctrl *UserController) CreateUser(c echo.Context) error {
 		case errors.Is(err, errutil.ErrUserAlreadyExist):
 			return c.JSON(http.StatusConflict, msgutil.UserAlreadyExists())
 		}
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 	return c.JSON(http.StatusCreated, msgutil.UserCreatedSuccessfully())
 }
@@ -101,7 +107,9 @@ func (ctrl *UserController) UpdateUser(c echo.Context) error {
 		case errors.Is(err, errutil.ErrUserNotFound):
 			return c.JSON(http.StatusNotFound, msgutil.UserNotFound())
 		}
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusOK, msgutil.UserUpdatedSuccessfully())
@@ -124,7 +132,9 @@ func (ctrl *UserController) DeleteUser(c echo.Context) error {
 		case errors.Is(err, errutil.ErrUserNotFound):
 			return c.JSON(http.StatusNotFound, msgutil.UserNotFound())
 		}
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusOK, msgutil.UserDeletedSuccessfully())
@@ -148,7 +158,9 @@ func (ctrl *UserController) ReadUser(c echo.Context) error {
 		case errors.Is(err, errutil.ErrUserNotFound):
 			return c.JSON(http.StatusNotFound, msgutil.UserNotFound())
 		}
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusOK, user)
@@ -169,7 +181,9 @@ func (ctrl *UserController) ListUsers(c echo.Context) error {
 	}
 	resp, err := ctrl.userSvc.ListUsers(req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusOK, resp)

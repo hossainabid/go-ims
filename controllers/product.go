@@ -50,7 +50,9 @@ func (ctrl *ProductController) CreateProduct(c echo.Context) error {
 	resp, err := ctrl.productSvc.CreateProduct(&req)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 	return c.JSON(http.StatusCreated, resp)
 }
@@ -68,7 +70,9 @@ func (ctrl *ProductController) ListProducts(c echo.Context) error {
 	}
 	products, err := ctrl.productSvc.ListProducts(req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 	return c.JSON(http.StatusOK, products)
 }
@@ -92,7 +96,9 @@ func (ctrl *ProductController) ReadProductByID(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, msgutil.ProductNotFound())
 	}
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 	return c.JSON(http.StatusOK, product)
 }
@@ -115,7 +121,9 @@ func (ctrl *ProductController) UpdateProduct(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, msgutil.ProductNotFound())
 	}
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 	return c.JSON(http.StatusOK, resp)
 }
@@ -139,7 +147,9 @@ func (ctrl *ProductController) DeleteProduct(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, msgutil.ProductNotFound())
 	}
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 	return c.JSON(http.StatusNoContent, resp)
 }

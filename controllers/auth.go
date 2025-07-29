@@ -40,7 +40,9 @@ func (ctrl *AuthController) Login(c echo.Context) error {
 		case errors.Is(err, errutil.ErrInvalidLoginCredentials):
 			return c.JSON(http.StatusUnauthorized, msgutil.InvalidLoginCredentials())
 		}
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 
 	return c.JSON(http.StatusOK, resp)
@@ -53,7 +55,9 @@ func (ctrl *AuthController) Logout(c echo.Context) error {
 	}
 
 	if err := ctrl.authSvc.Logout(user.AccessUuid, user.RefreshUuid); err != nil {
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 
 	return c.NoContent(http.StatusOK)

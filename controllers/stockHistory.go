@@ -46,7 +46,9 @@ func (ctrl *StockHistoryController) RecordStockHistory(c echo.Context) error {
 	resp, err := ctrl.stockHistorySvc.RecordStockHistory(&req)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 	return c.JSON(http.StatusCreated, resp)
 }
@@ -72,7 +74,9 @@ func (ctrl *StockHistoryController) ListStockHistories(c echo.Context) error {
 	}
 	stockHistories, err := ctrl.stockHistorySvc.ListStockHistories(req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+		return c.JSON(http.StatusInternalServerError, &types.CommonError{
+			Error: err.Error(),
+		})
 	}
 	return c.JSON(http.StatusOK, stockHistories)
 }

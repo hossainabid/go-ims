@@ -51,7 +51,9 @@ func (m *AuthMiddleware) Authenticate(permission string) echo.MiddlewareFunc {
 
 			permissions, err := m.userSvc.ReadPermissionsByRole(userInfo.RoleID)
 			if err != nil {
-				return c.JSON(http.StatusInternalServerError, msgutil.SomethingWentWrongMsg())
+				return c.JSON(http.StatusInternalServerError, &types.CommonError{
+					Error: err.Error(),
+				})
 			}
 
 			if permission != "" && !m.isPermissionAllowed(permission, permissions) {
