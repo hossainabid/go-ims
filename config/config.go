@@ -43,17 +43,15 @@ type RedisConfig struct {
 }
 
 type AsynqConfig struct {
-	RedisAddr                     string
-	DB                            int
-	Pass                          string
-	Concurrency                   int
-	Queue                         string
-	Retention                     time.Duration // in hours
-	RetryCount                    int
-	Delay                         time.Duration // in seconds
-	EmailInvitationTaskDelay      time.Duration // in seconds
-	EmailInvitationTaskRetryCount int
-	EmailInvitationTaskRetryDelay time.Duration // in seconds
+	RedisAddr          string
+	DB                 int
+	Pass               string
+	Concurrency        int
+	Queue              string
+	Retention          time.Duration // in hours
+	RetryCount         int
+	Delay              time.Duration // in seconds
+	StockSyncTaskDelay time.Duration // in seconds
 }
 
 type JwtConfig struct {
@@ -190,14 +188,15 @@ func setDefaultConfig() {
 	}
 
 	config.Asynq = &AsynqConfig{
-		RedisAddr:   "192.168.56.106:6379",
-		DB:          15,
-		Pass:        "password",
-		Concurrency: 10,
-		Queue:       "inventory_management",
-		Retention:   168,
-		RetryCount:  25,
-		Delay:       0,
+		RedisAddr:          "192.168.56.106:6379",
+		DB:                 15,
+		Pass:               "password",
+		Concurrency:        10,
+		Queue:              "inventory_management",
+		Retention:          168,
+		RetryCount:         3,
+		Delay:              0,
+		StockSyncTaskDelay: 10,
 	}
 
 	config.Logger = &LoggerConfig{

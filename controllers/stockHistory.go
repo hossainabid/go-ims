@@ -15,11 +15,13 @@ import (
 
 type StockHistoryController struct {
 	stockHistorySvc domain.StockHistoryService
+	asynqSvc        domain.AsynqService
 }
 
-func NewStockHistoryController(stockHistorySvc domain.StockHistoryService) *StockHistoryController {
+func NewStockHistoryController(stockHistorySvc domain.StockHistoryService, asynqSvc domain.AsynqService) *StockHistoryController {
 	return &StockHistoryController{
 		stockHistorySvc: stockHistorySvc,
+		asynqSvc:        asynqSvc,
 	}
 }
 
@@ -50,6 +52,13 @@ func (ctrl *StockHistoryController) RecordStockHistory(c echo.Context) error {
 			Error: err.Error(),
 		})
 	}
+
+	go func() {
+		if err := ctrl.asynqSvc.CreateStockSyncTask(resp.StockHistory); err != nil {
+			logger.Error("failed to enqueue stock sync task: %v", err)
+		}
+	}()
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
