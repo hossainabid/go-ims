@@ -30,9 +30,10 @@ func runWorker(cmd *cobra.Command, args []string) {
 
 	// services
 	_ = services.NewAsynqService(config.Asynq(), asynqRepo)
+	productSvc := services.NewProductServiceImpl(dbRepo)
 
 	// controllers
-	asynqCtrl := controllers.NewAsynqController(dbRepo)
+	asynqCtrl := controllers.NewAsynqController(productSvc)
 
 	mux := asynq_.NewServeMux()
 

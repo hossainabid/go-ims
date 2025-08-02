@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 
+	"github.com/hossainabid/go-ims/consts"
 	"github.com/hossainabid/go-ims/domain"
 	"github.com/hossainabid/go-ims/models"
 	"github.com/hossainabid/go-ims/types"
@@ -87,4 +88,45 @@ func (svc *ProductServiceImpl) DeleteProduct(id int) (*types.DeleteProductRespon
 	return &types.DeleteProductResponse{
 		Message: "Product deleted",
 	}, nil
+}
+
+func (svc *ProductServiceImpl) StockSync(stockHistory models.StockHistory) error {
+	product, err := svc.productRepo.ReadProductByID(stockHistory.ProductID)
+	if err != nil {
+		return err
+	}
+	if product == nil {
+		return errutil.ErrRecordNotFound
+	}
+
+	if stockHistory.OperationType == consts.OperationTypeRequisition {
+		product.WarehouseQty += stockHistory.Qty
+	} else if stockHistory.OperationType == consts.OperationTypePublishInLive {
+		if stockHistory.Qty > product.WarehouseQty {
+			return errors.New("insufficient stock in warehouse to publish in live")
+		} else {
+			product.WarehouseQty -= stockHistory.Qty
+			product.LiveQty += stockHistory.Qty
+		}
+	} else if stockHistory.OperationType == consts.OperationTypeRevertBackFromLive {
+		if stockHistory.Qty > product.LiveQty {
+			return errors.New("insufficient stock in live to revert back from live")
+		} else {
+			product.LiveQty -= stockHistory.Qty
+			product.WarehouseQty += stockHistory.Qty
+		}
+	} else if stockHistory.OperationType == consts.OperationTypeMarkDamage {
+		if stockHistory.Qty > product.WarehouseQty {
+			return errors.New("insufficient stock in warehouse to mark damage")
+		} else {
+			product.WarehouseQty -= stockHistory.Qty
+		}
+	}
+
+	_, err = svc.productRepo.UpdateProduct(product)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

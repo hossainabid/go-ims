@@ -12,6 +12,7 @@ type (
 		ReadProductByID(id int) (*models.Product, error)
 		UpdateProduct(productReq *types.UpdateProductRequest) (*types.UpdateProductResponse, error)
 		DeleteProduct(id int) (*types.DeleteProductResponse, error)
+		StockSync(stockHistory models.StockHistory) error
 	}
 
 	ProductRepository interface {
