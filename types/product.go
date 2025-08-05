@@ -7,10 +7,11 @@ import (
 
 type (
 	CreateProductRequest struct {
-		Name        string  `json:"name"`
-		Description *string `json:"description"`
-		Sku         string  `json:"sku"`
-		CreatedBy   int     `json:"created_by"`
+		Name         string  `json:"name"`
+		Description  *string `json:"description"`
+		Sku          string  `json:"sku"`
+		ThresholdQty int     `json:"threshold_qty"`
+		CreatedBy    int     `json:"created_by"`
 	}
 
 	UpdateProductRequest struct {
@@ -62,21 +63,23 @@ func (upreq *UpdateProductRequest) Validate() error {
 
 func (cpreq *CreateProductRequest) ToProduct() *models.Product {
 	product := &models.Product{
-		Name:        cpreq.Name,
-		Description: cpreq.Description,
-		Sku:         cpreq.Sku,
-		CreatedBy:   cpreq.CreatedBy,
+		Name:         cpreq.Name,
+		Description:  cpreq.Description,
+		Sku:          cpreq.Sku,
+		ThresholdQty: cpreq.ThresholdQty,
+		CreatedBy:    cpreq.CreatedBy,
 	}
 	return product
 }
 
 func (upreq *UpdateProductRequest) ToProduct() *models.Product {
 	product := &models.Product{
-		ID:          upreq.ID,
-		Name:        upreq.Name,
-		Description: upreq.Description,
-		Sku:         upreq.Sku,
-		CreatedBy:   upreq.CreatedBy,
+		ID:           upreq.ID,
+		Name:         upreq.Name,
+		Description:  upreq.Description,
+		Sku:          upreq.Sku,
+		ThresholdQty: upreq.ThresholdQty,
+		CreatedBy:    upreq.CreatedBy,
 	}
 	return product
 }

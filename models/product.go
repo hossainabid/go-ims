@@ -9,6 +9,7 @@ type Product struct {
 	Sku          string    `json:"sku" gorm:"column:sku"`
 	LiveQty      int       `json:"live_qty" gorm:"column:live_qty"`
 	WarehouseQty int       `json:"warehouse_qty" gorm:"column:warehouse_qty"`
+	ThresholdQty int       `json:"threshold_qty" gorm:"column:threshold_qty"`
 	CreatedBy    int       `json:"created_by" gorm:"column:created_by"`
 	CreatedAt    time.Time `json:"-" gorm:"column:created_at"`
 	UpdatedAt    time.Time `json:"-" gorm:"column:updated_at"`

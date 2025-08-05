@@ -31,6 +31,8 @@ func Execute() {
 	conn.ConnectRedis()
 	conn.InitAsynqClient()
 	conn.InitAsyncInspector()
+	conn.ConnectEmail()
+	conn.ConnectWorker()
 
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)

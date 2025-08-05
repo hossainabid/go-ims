@@ -163,8 +163,9 @@ func LoadConfig() {
 
 func setDefaultConfig() {
 	config.App = &AppConfig{
-		Name: "inventory-management-service",
-		Port: "8080",
+		Name:            "inventory-management-service",
+		Port:            "8080",
+		NumberOfWorkers: 5,
 	}
 
 	config.DB = &DbConfig{
@@ -209,5 +210,10 @@ func setDefaultConfig() {
 		RefreshTokenSecret: "refresh_token",
 		AccessTokenExpiry:  3600,
 		RefreshTokenExpiry: 3600,
+	}
+
+	config.Email = &EmailConfig{
+		Url:     "https://webhook.site/b2218104-ab43-4b22-949f-7796be528019/email",
+		Timeout: 5,
 	}
 }

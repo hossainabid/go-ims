@@ -1,7 +1,8 @@
 {
   "app": {
     "name": "inventory-management-service",
-    "port": "8080"
+    "port": "8080",
+    "numberOfWorkers": 5
   },
   "db": {
     "host": "192.168.56.106",
@@ -28,8 +29,9 @@
     "concurrency": 10,
     "queue": "inventory_management",
     "retention": 168,
-    "retryCount": 25,
-    "delay": 0
+    "retryCount": 3,
+    "delay": 0,
+    "stockSyncTaskDelay": 10
   },
   "logger": {
     "level": "debug",
@@ -40,5 +42,9 @@
     "refreshTokenSecret": "refresh_token",
     "accessTokenExpiry": 3600,
     "refreshTokenExpiry": 3600
+  },
+  "email": {
+    "url": "https://webhook.site/b2218104-ab43-4b22-949f-7796be528019/email",
+    "timeout": 5
   }
 }

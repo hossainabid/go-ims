@@ -13,11 +13,13 @@ import (
 
 type AsynqController struct {
 	productSvc domain.ProductService
+	mailSvc    domain.MailService
 }
 
-func NewAsynqController(productSvc domain.ProductService) *AsynqController {
+func NewAsynqController(productSvc domain.ProductService, mailSvc domain.MailService) *AsynqController {
 	return &AsynqController{
 		productSvc: productSvc,
+		mailSvc:    mailSvc,
 	}
 }
 
@@ -34,6 +36,12 @@ func (ac *AsynqController) ProcessStockSyncTask(ctx context.Context, t *asynq.Ta
 	if err != nil {
 		return err
 	}
+
+	err = ac.mailSvc.SendLowStockEmail(stockHistory.ProductID)
+	if err != nil {
+		return err
+	}
+
 	t.ResultWriter().Write([]byte(fmt.Sprintf("Stock sync task created successfully for product id: %d", stockHistory.ProductID)))
 
 	return nil
