@@ -1,6 +1,8 @@
-# Project Structure
+# Inventory Management System (IMS)
 
-Below is the structure of the `go-ims` (Inventory Management System) project, reflecting its actual layout:
+## Project Structure
+
+Below is the structure of the `go-ims` project, reflecting its actual layout:
 
 ```
 go-ims/
@@ -28,7 +30,7 @@ go-ims/
 └── README.md           # Project documentation
 
 ```
-# Tech Stack
+## Tech Stack
 
 - Language : Golang
 - Database : Mysql
