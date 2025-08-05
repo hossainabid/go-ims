@@ -28,8 +28,8 @@ go-ims/
 ├── go.sum              # Dependency checksum file
 ├── main.go             # Main go file
 └── README.md           # Project documentation
-
 ```
+
 ## Tech Stack
 
 - Language : Golang
@@ -52,25 +52,25 @@ go mod tidy
 go mod vendor
 ```
 
-## Run consul service (Optional)
+## Run consul service (optional)
 
 ```bash
 consul agent -config-file="C:\Users\Abid\consul\config\consul.hcl"
 ```
 
-## Build the project
+## Build project
 
 ```bash
 go build -o app .
 ```
 
-## Run the project server
+## Run project server
 
 ```bash
 ./app serve
 ```
 
-## Run the project worker
+## Run project worker
 
 ```bash
 ./app worker
