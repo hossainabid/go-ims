@@ -181,11 +181,17 @@ func setDefaultConfig() {
 	}
 
 	config.Redis = &RedisConfig{
-		Host:            "192.168.56.106",
-		Port:            "6379",
-		Pass:            "password",
-		Db:              2,
-		MandatoryPrefix: "inventory_management_",
+		Host:               "192.168.56.106",
+		Port:               "6379",
+		Pass:               "password",
+		Db:                 2,
+		MandatoryPrefix:    "inventory_management_",
+		AccessUuidPrefix:   "access-uuid_",
+		RefreshUuidPrefix:  "refresh-uuid_",
+		UserPrefix:         "user_",
+		PermissionPrefix:   "permissions_",
+		UserCacheTTL:       3600,
+		PermissionCacheTTL: 86400,
 	}
 
 	config.Asynq = &AsynqConfig{

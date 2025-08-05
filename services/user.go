@@ -183,16 +183,13 @@ func (svc *UserServiceImpl) StoreInCache(user *types.UserInfo) error {
 }
 
 func (svc *UserServiceImpl) ReadPermissionsByRole(roleID int) ([]*models.Permission, error) {
-	permissions, err := svc.readPermissionFromCache(roleID)
-	if err != nil {
-		return nil, err
+	permissionsFromCache, _ := svc.readPermissionFromCache(roleID)
+
+	if permissionsFromCache != nil {
+		return permissionsFromCache, nil
 	}
 
-	if permissions != nil {
-		return permissions, nil
-	}
-
-	permissions, err = svc.repo.ReadPermissionsByRole(roleID)
+	permissions, err := svc.repo.ReadPermissionsByRole(roleID)
 	if err != nil {
 		return nil, err
 	}

@@ -20,7 +20,13 @@
     "port": "6379",
     "pass": "password",
     "db": 2,
-    "mandatoryPrefix": "inventory_managementt_"
+    "mandatoryPrefix": "inventory_managementt_",
+    "accessUuidPrefix": "access-uuid_",
+		"refreshUuidPrefix": "refresh-uuid_",
+		"userPrefix": "user_",
+		"permissionPrefix": "permissions_",
+		"userCacheTTL": 3600,
+		"permissionCacheTTL": 86400
   },
   "asynq": {
     "redisAddr": "192.168.56.106:6379",
